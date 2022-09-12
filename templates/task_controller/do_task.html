@@ -1,0 +1,170 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<section class="section-content padding-y bg">
+    <div class="container">
+    
+    <!-- ============================ COMPONENT 1 ================================= -->
+    <div class="card">
+        <div class="row no-gutters">
+            <aside class="col-md-6">
+    <article class="gallery-wrap"> 
+        <div class="row" >
+        <div class="col">
+            <figure class="card">
+                <div class="img-wrap"> 
+                    <img src="{{ task.order.images.url }}">
+                </div> <!-- img-wrap.// -->
+            </figure>
+        </div> <!-- col.// -->
+    </div>
+    </article> <!-- gallery-wrap .end// -->
+            </aside>
+            <main class="col-md-6 border-left">
+                <div class="card mx-auto" style="max-width:520px; margin-top:40px;">
+                    <article class="card-body">
+                      <header class="mb-4"><h4 class="card-title">Do Task</h4></header>
+                      <form action="{% url 'do_task' task.id %}" method="POST" enctype="multipart/form-data">
+                          {% csrf_token %}
+                          <!-- Timer -->
+                          <div class="form-group">
+                              <label>Name</label>
+                              <input type="text" class="form-control" placeholder="Name of the Order" name="name" value="{{ name }}" readonly>
+                          </div> <!-- form-group end.// -->
+                          <div class="form-group">
+                            <label>Time Counter Data</label>
+                            <input type="text" class="form-control" id="time_counter" name="time_counter" readonly>
+                        </div> <!-- form-group end.// -->
+                            
+                            <div class="form-group">
+                                <button type="submit" name="store_paused_data" class="btn btn-info btn-block"> Store Paused Data  </button>
+                            </div> <!-- form-group// --> 
+                          <div class="form-group">
+                              <button type="submit" name="stop_save" class="btn btn-danger btn-block"> Stop / Save  </button>
+                          </div> <!-- form-group// -->          
+                          </form>
+                          <div class="container">
+                            <div class="form-group text-center">
+                                <label>Time Counter</label>
+                                <br>
+                                <div id="display">
+                                    00:00:00
+                                </div>
+                                </div>
+                            <div class="buttons" class="form-group">
+                                <button id="startStop" onclick="startStop()" name ="start_pause" class="btn btn-success btn-block" type="button">Start</button> 
+                                <br>
+                                <div class="text-center form-group" id="info_text">
+                                    <label>Press Reset to activate your timer</label>
+                                </div>
+                                <button id="reset" onclick="reset()"  name ="reset" class="btn btn-danger btn-block" type="button">Reset</button>
+                            </div>
+                        </div> 
+                         
+                      </article><!-- card-body.// -->
+                  </div> <!-- card .// -->
+            </main> <!-- col.// -->
+        </div> <!-- row.// -->
+    </div> <!-- card.// -->
+    <!-- ============================ COMPONENT 1 END .// ================================= -->
+    <br>
+    </div> <!-- container .//  -->
+    </section>
+    <script>
+        //Define vars to hold time values
+let seconds = 0;
+let minutes = 0;
+let hours = 0;
+
+//Define vars to hold "display" value
+let displaySeconds = 0;
+let displayMinutes = 0;
+let displayHours = 0;
+
+//Define var to hold setInterval() function
+let interval = null;
+
+//Define var to hold stopwatch status
+let status = "stopped";
+
+//Stopwatch function (logic to determine when to increment next value, etc.)
+function stopWatch(){
+
+    seconds++;
+
+    //Logic to determine when to increment next value
+    if(seconds / 60 === 1){
+        seconds = 0;
+        minutes++;
+
+        if(minutes / 60 === 1){
+            minutes = 0;
+            hours++;
+        }
+
+    }
+
+    //If seconds/minutes/hours are only one digit, add a leading 0 to the value
+    if(seconds < 10){
+        displaySeconds = "0" + seconds.toString();
+    }
+    else{
+        displaySeconds = seconds;
+    }
+
+    if(minutes < 10){
+        displayMinutes = "0" + minutes.toString();
+    }
+    else{
+        displayMinutes = minutes;
+    }
+
+    if(hours < 10){
+        displayHours = "0" + hours.toString();
+    }
+    else{
+        displayHours = hours;
+    }
+
+    //Display updated time values to user
+    document.getElementById("display").innerHTML = displayHours + ":" + displayMinutes + ":" + displaySeconds;
+
+}
+
+
+
+function startStop(){
+
+    if(status === "stopped"){
+
+        //Start the stopwatch (by calling the setInterval() function)
+        interval = window.setInterval(stopWatch, 1000);
+        document.getElementById("startStop").innerHTML = "Stop";
+        status = "started";
+
+    }
+    else{
+
+        window.clearInterval(interval);
+        document.getElementById("startStop").innerHTML = "Start";
+        status = "stopped";
+
+    }
+
+}
+
+//Function to reset the stopwatch
+function reset(){
+
+    window.clearInterval(interval);
+    seconds = 0;
+    minutes = 0;
+    hours = 0;
+    document.getElementById("display").innerHTML = "00:00:00";
+    document.getElementById("startStop").innerHTML = "Start";
+
+}
+    </script>
+    
+    <!-- ========================= SECTION CONTENT END// ========================= -->
+{% endblock %}

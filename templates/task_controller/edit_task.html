@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<section class="section-content padding-y bg">
+    <div class="container">
+    
+    <!-- ============================ COMPONENT 1 ================================= -->
+    <div class="card">
+        <div class="row no-gutters">
+            <aside class="col-md-6">
+    <article class="gallery-wrap"> 
+        <div class="row" >
+        <div class="col">
+            <figure class="card">
+                <div class="img-wrap"> 
+                    <img src="{{ task.order.images.url }}">
+                </div> <!-- img-wrap.// -->
+            </figure>
+        </div> <!-- col.// -->
+    </div>
+    </article> <!-- gallery-wrap .end// -->
+            </aside>
+            <main class="col-md-6 border-left">
+                <div class="card mx-auto" style="max-width:520px; margin-top:40px;">
+                    <article class="card-body">
+                      <header class="mb-4"><h4 class="card-title">Edit Task</h4></header>
+                      <form action="{% url 'edit_task' task.id %}" method="POST" enctype="multipart/form-data">
+                          {% csrf_token %}
+                          <div class="form-group">
+                              <label>Name</label>
+                              <input type="text" class="form-control" placeholder="Name of the Order" name="name" value="{{ name }}">
+                          </div> <!-- form-group end.// -->
+                          <div class="form-group">
+                              <button type="submit" class="btn btn-success btn-block"> Edit Task  </button>
+                          </div> <!-- form-group// -->           
+                          </form>
+                      </article><!-- card-body.// -->
+                  </div> <!-- card .// -->
+            </main> <!-- col.// -->
+        </div> <!-- row.// -->
+    </div> <!-- card.// -->
+    <!-- ============================ COMPONENT 1 END .// ================================= -->
+    <br>
+    </div> <!-- container .//  -->
+    </section>
+    <!-- ========================= SECTION CONTENT END// ========================= -->
+{% endblock %}
