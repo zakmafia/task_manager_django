@@ -124,6 +124,7 @@ def do_task(request, task_id):
     task = Task.objects.get(id=task_id)
     name = task.name
     time_stored = task.time_counter if task.time_counter else ""
+    print(time_stored)
     if 'store_paused_data' in request.POST:
         time = request.POST['time_counter']
         task.time_counter = time

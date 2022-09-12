@@ -12,3 +12,4 @@ class OrderAdmin(admin.ModelAdmin):
 class TaskAdmin(admin.ModelAdmin):
     list_display = ('name', 'order', 'time_counter', 'created_time')
     search_fields = ('name', 'order')
+    
