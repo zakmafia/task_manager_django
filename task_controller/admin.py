@@ -10,6 +10,6 @@ class OrderAdmin(admin.ModelAdmin):
 
 @admin.register(Task)
 class TaskAdmin(admin.ModelAdmin):
-    list_display = ('name', 'order', 'time_counter', 'created_time')
+    list_display = ('name', 'order', 'time_counter', 'created_time', 'is_finished')
     search_fields = ('name', 'order')
     

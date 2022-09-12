@@ -69,18 +69,30 @@
     <script>
         {% if time_stored %}
         document.getElementById("time_counter").value = "{{ time_stored|time:'H:i:s' }}"
+        document.getElementById("display").value = "{{ time_stored|time:'H:i:s' }}"
         {% endif %}
 
         //Define vars to hold time values
+        {% if time_stored %}
+        let seconds = "{{ time_stored_second }}";
+        let minutes = "{{ time_stored_minute }}";
+        let hours = "{{ time_stored_hour }}";
+        {% else %}
         let seconds = 0;
         let minutes = 0;
         let hours = 0;
+        {% endif %}
 
         //Define vars to hold "display" value
+        {% if time_stored %}
+        let displaySeconds = "{{ time_stored_second }}";
+        let displayMinutes = "{{ time_stored_minute }}";
+        let displayHours = "{{ time_stored_hour }}";
+        {% else %}
         let displaySeconds = 0;
         let displayMinutes = 0;
         let displayHours = 0;
-
+        {% endif %}
         //Define var to hold setInterval() function
         let interval = null;
 
@@ -156,13 +168,15 @@
         //Function to reset the stopwatch
         function reset(){
 
-            window.clearInterval(interval);
+            if (confirm("Do you want to reset the time?")){
+                window.clearInterval(interval);
             seconds = 0;
             minutes = 0;
             hours = 0;
             document.getElementById("display").innerHTML = "00:00:00";
             document.getElementById("startStop").innerHTML = "Start";
             document.getElementById("time_counter").value = document.getElementById("display").innerHTML
+            }
 
         }
     </script>

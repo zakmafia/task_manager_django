@@ -12,4 +12,5 @@ urlpatterns = [
     path('edit_order/<order_id>/', views.edit_order, name='edit_order'),
     path('edit_task/<task_id>/', views.edit_task, name='edit_task'),
     path('do_task/<task_id>/', views.do_task, name="do_task"),
+    path('finished_tasks/', views.view_finished_tasks, name="finished_tasks"),
 ]

@@ -62,7 +62,7 @@ def view_order(request):
 
 def view_task(request, slug):
     order = get_object_or_404(Order, slug=slug)
-    tasks = Task.objects.filter(order=order)
+    tasks = Task.objects.filter(order=order, is_finished=False)
     tasks_count = tasks.count()
     request.session['slug'] = slug
     context = {
@@ -123,21 +123,46 @@ def edit_task(request, task_id):
 def do_task(request, task_id):
     task = Task.objects.get(id=task_id)
     name = task.name
-    time_stored = task.time_counter if task.time_counter else ""
-    print(time_stored)
-    if 'store_paused_data' in request.POST:
-        time = request.POST['time_counter']
-        task.time_counter = time
-        task.save()
 
-    if 'stop_save' in request.POST:
-        time = request.POST['time_counter']
-        task.time_counter = time
-        task.is_finished = True
-        task.save()
+    time_stored = task.time_counter if task.time_counter else ""
+    time_stored_hour = task.time_counter.hour if task.time_counter else ""
+    time_stored_minute = task.time_counter.minute if task.time_counter else ""
+    time_stored_second = task.time_counter.second if task.time_counter else ""
+
+    try:
+        if 'store_paused_data' in request.POST:
+            time = request.POST['time_counter']
+            task.time_counter = time
+            task.save()
+            task = Task.objects.get(id=task_id)
+            time_stored = task.time_counter
+            time_stored_hour = task.time_counter.hour
+            time_stored_minute = task.time_counter.minute
+            time_stored_second = task.time_counter.second
+
+        if 'stop_save' in request.POST:
+            time = request.POST['time_counter']
+            task.time_counter = time
+            task.is_finished = True
+            task.save()
+            return redirect('finished_tasks')
+    except:
+        pass
     context = {
         'name': name,
         'task': task,
         'time_stored': time_stored,
+        'time_stored_hour': time_stored_hour,
+        'time_stored_minute': time_stored_minute,
+        'time_stored_second': time_stored_second,
     }
     return render(request, 'task_controller/do_task.html', context)
+
+def view_finished_tasks(request):
+    tasks = Task.objects.filter(is_finished=True)
+    tasks_count = tasks.count()
+    context = {
+        'tasks': tasks,
+        'tasks_count': tasks_count,
+    }
+    return render(request, 'task_controller/finished_tasks.html', context)
